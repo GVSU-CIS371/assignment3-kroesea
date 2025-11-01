@@ -1,32 +1,51 @@
 <template>
   <div>
-    <Beverage :isIced="beverageStore.currentTemp === 'Cold'" />
+    <Beverage :isIced="store.currentTemp === 'Cold'" />
+    
+    <input v-model="store.currentBeverageName" type="text" placeholder="Name" />
+    <button @click="store.makeBeverage()">Make Beverage</button>
+
+    <div id="beverage-container">
+      <label v-for="beverage in store.savedBeverages" :key="beverage.name">
+        <input type="radio" name="saved" @click="store.showBeverage(beverage)" />
+        {{ beverage.name }}
+      </label>
+    </div>
+
     <ul>
       <li>
-        <template v-for="temp in beverageStore.temps" :key="temp">
-          <label>
-            <input
-              type="radio"
-              name="temperature"
-              :id="`r${temp}`"
-              :value="temp"
-              v-model="beverageStore.currentTemp"
-            />
-            {{ temp }}
-          </label>
-        </template>
+        <label v-for="temp in store.temps" :key="temp">
+          <input type="radio" name="temperature" :value="temp" v-model="store.currentTemp" />
+          {{ temp }}
+        </label>
+      </li>
+      <li>
+        <label v-for="beverage in store.bases" :key="beverage.id">
+          <input type="radio" name="base" :value="beverage" v-model="store.currentBase" />
+          {{ beverage.name }}
+        </label>
+      </li>
+      <li>
+        <label v-for="cream in store.creamers" :key="cream.id">
+          <input type="radio" name="creamer" :value="cream" v-model="store.currentCreamer" />
+          {{ cream.name }}
+        </label>
+      </li>
+      <li>
+        <label v-for="syrup in store.syrups" :key="syrup.id">
+          <input type="radio" name="syrup" :value="syrup" v-model="store.currentSyrup" />
+          {{ syrup.name }}
+        </label>
       </li>
     </ul>
-    <input type="text" placeholder="Beverage Name" />
-    <button>🍺 Make Beverage</button>
   </div>
-  <div id="beverage-container" style="margin-top: 20px"></div>
 </template>
 
 <script setup lang="ts">
 import Beverage from "./components/Beverage.vue";
 import { useBeverageStore } from "./stores/beverageStore";
-const beverageStore = useBeverageStore();
+
+const store = useBeverageStore();
 </script>
 
 <style lang="scss">
